@@ -1,0 +1,2 @@
+Alıcı modül kodları için: https://gist.github.com/RobolinkAkademi/7102301b75a190377f64c158eaa58137
+RobolinkAkademi'ye teşekkürler / arduino_rf_433mhz_alici_kodu.ino
