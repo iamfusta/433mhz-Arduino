@@ -1,0 +1,39 @@
+//aciklamali vericiPin8serialyok kodu
+// serial komutlar silindi.
+// tx pin8
+
+#include <VirtualWire.h>  // VirtualWire kütüphanesini dahil eder, RF iletişimi için kullanılır
+
+char *message;  // Gönderilecek mesajı tutan pointer
+unsigned long previousMillis = 0;  // En son mesaj zamanını saklar
+const long interval = 100;  // Mesaj güncelleme aralığı (milisaniye cinsinden)
+
+void setup()
+{
+  vw_set_ptt_inverted(true);  // PTT işlevselliğini ters çevirir (bazı RF modülleri için gerekli)
+  vw_set_tx_pin(8);  // Kablosuz modülün TX pinini 8 olarak ayarlar
+  vw_setup(4000);  // VirtualWire kütüphanesi iletişim hızını 4000 bps olarak ayarlar
+}
+
+void loop()
+{
+  unsigned long currentMillis = millis();  // Geçerli zamanı alır
+
+  // Zamanın önceki işaretleme zamanından itibaren interval'dan daha az olup olmadığını kontrol eder
+  if (currentMillis - previousMillis < interval)
+  {
+    message = "1";  // Eğer koşul doğruysa, mesajı "1" olarak ayarlar
+  }
+  else if (currentMillis - previousMillis < 2 * interval)
+  {
+    message = "0";  // Zaman 2x interval'dan daha az ise, mesajı "0" olarak ayarlar
+  }
+  else
+  {
+    previousMillis = currentMillis;  // Hiçbir koşul sağlanmazsa, zaman damgasını günceller
+  }
+
+  vw_send((uint8_t *)message, strlen(message));  // Mesajı kablosuz olarak gönderir
+  vw_wait_tx();  // Gönderimin tamamlanmasını bekler
+  delay(00);  // Kısa bir bekleme süresi (burada 0 ms)
+}
